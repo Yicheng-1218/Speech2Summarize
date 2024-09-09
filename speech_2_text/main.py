@@ -7,6 +7,7 @@ import itertools
 import pickle
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
 
 
 ffmpeg_path = "./speech_2_text/ffmpeg/bin"
@@ -20,7 +21,7 @@ os.environ['PATH'] += os.pathsep + ffmpeg_path
 whisper_model = whisper.load_model('base',download_root=model_path)
 
 # LLM 模型
-model=ChatOpenAI(model='gpt-3.5-turbo',temperature=0.5)
+model=ChatOpenAI(model='gpt-4o-mini',temperature=0.3)
 prompt = PromptTemplate.from_template("""
     Please summarize the following text between ``` and respond in zh-TW. 
     Only summary is needed dont't ask any questions.
@@ -29,7 +30,7 @@ prompt = PromptTemplate.from_template("""
     {text}
     ```
     """)
-chain=prompt|model
+chain=prompt|model|StrOutputParser()
 
 
 # 異步執行 Whisper 的轉譯
@@ -69,23 +70,23 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
 
 
 async def main():
-        media_path = './speech_2_text/media/'
-        filename = 'stock_news.mp3'
-        
-        # 如果有 cache 就直接讀取 cache
-        if Path(media_path+'cache.pkl').exists():
-            print('找到 cache，直接讀取')
-            result = pickle.load(open(media_path+'cache.pkl','rb'))
-        else:
-            # 若無 cache 則進行轉譯
-            result = await transcribe_audio(
-                media_path+filename, 
-                language='zh',
-                save_path='./speech_2_text/media/'
-                )
-        
-        summarize = chain.invoke({'text':result['text']})
-        print(summarize.content)
+    media_path = './speech_2_text/media/'
+    filename = 'stock_news.mp3'
+    
+    # 如果有 cache 就直接讀取 cache
+    if Path(media_path+'cache.pkl').exists():
+        print('找到 cache，直接讀取')
+        result = pickle.load(open(media_path+'cache.pkl','rb'))
+    else:
+        # 若無 cache 則進行轉譯
+        result = await transcribe_audio(
+            media_path+filename, 
+            language='zh',
+            save_path='./speech_2_text/media/'
+            )
+    
+    summarize = chain.invoke({'text':result['text']})
+    print(summarize)
 
 
 if __name__ == '__main__':
