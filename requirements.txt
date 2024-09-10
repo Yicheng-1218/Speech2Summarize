@@ -2,3 +2,5 @@ dotenv
 langchain
 langchain-openai
 openai-whisper
+langchain-community
+langchain-anthropic

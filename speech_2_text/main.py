@@ -6,7 +6,7 @@ from pathlib import Path
 import itertools
 import pickle
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
 
 
@@ -21,7 +21,7 @@ os.environ['PATH'] += os.pathsep + ffmpeg_path
 whisper_model = whisper.load_model('base',download_root=model_path)
 
 # LLM 模型
-model=ChatOpenAI(model='gpt-4o-mini',temperature=0.3)
+model=ChatAnthropic(model=os.getenv('ANTHROPIC_LLM_MODEL'),temperature=0.3)
 prompt = PromptTemplate.from_template("""
     Please summarize the following text between ``` and respond in zh-TW. 
     Only summary is needed dont't ask any questions.

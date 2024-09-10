@@ -1,10 +1,10 @@
-from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.document_loaders import WebBaseLoader
 import dotenv
 import requests
+import os
 
 dotenv.load_dotenv(override=True)
 
@@ -24,8 +24,9 @@ def token_counter(text) -> int:
     """
     return requests.post('https://app.meteron.ai/api/tokens',text).json()['tokens']
 
-for i in docs:
-    print('Docs token:',token_counter(i.page_content))
+# 計算總token數
+docs_tokens = sum([token_counter(i.page_content) for i in docs])
+print('Docs tokens:',docs_tokens)
 
 
 # GPT-4o-mini
@@ -34,7 +35,8 @@ for i in docs:
 # Currently points to gpt-4o-mini-2024-07-18.
 
 # Context Window : 128,000 tokens , Output Max tokens : 16,384
-llm = ChatOpenAI(model='gpt-4o-mini', temperature=0.3)
+
+llm = ChatAnthropic(model=os.getenv('ANTHROPIC_LLM_MODEL'), temperature=0.3)
 
 prompt = ChatPromptTemplate.from_messages([("system", "Please write a summary for each document and respond in Traditional Chinese.\n\n{context}")])
 
