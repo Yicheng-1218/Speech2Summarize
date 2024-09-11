@@ -154,5 +154,8 @@ coverage/
 # whisper models
 speech_2_text/models/
 
+# Cache
+*.cache
+cache.*
 
 

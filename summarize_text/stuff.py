@@ -29,13 +29,8 @@ docs_tokens = sum([token_counter(i.page_content) for i in docs])
 print('Docs tokens:',docs_tokens)
 
 
-# GPT-4o-mini
-# Our affordable and intelligent small model for fast, lightweight tasks. 
-# GPT-4o mini is cheaper and more capable than GPT-3.5 Turbo. 
-# Currently points to gpt-4o-mini-2024-07-18.
 
-# Context Window : 128,000 tokens , Output Max tokens : 16,384
-
+# Context Window : 200000 tokens
 llm = ChatAnthropic(model=os.getenv('ANTHROPIC_LLM_MODEL'), temperature=0.3)
 
 prompt = ChatPromptTemplate.from_messages([("system", "Please write a summary for each document and respond in Traditional Chinese.\n\n{context}")])

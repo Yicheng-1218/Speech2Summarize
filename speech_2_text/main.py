@@ -8,7 +8,7 @@ import pickle
 from langchain.prompts import PromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
-
+from torch import cuda
 
 ffmpeg_path = "./speech_2_text/ffmpeg/bin"
 model_path = "./speech_2_text/models"
@@ -51,12 +51,15 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
     async def show_loading():
         for frame in itertools.cycle(['.  ', '.. ', '...']):
             print(f'\rLoading {frame}', end='', flush=True)
-            await asyncio.sleep(1) 
-            
+            await asyncio.sleep(1)
     loading_task = asyncio.create_task(show_loading())
 
     # 使用 asyncio.to_thread 將同步的 Whisper 轉譯操作轉成異步
-    task = asyncio.to_thread(whisper_model.transcribe, audio_path, language=language)
+    task = asyncio.to_thread(
+        whisper_model.transcribe,
+        audio_path,
+        language=language,
+        fp16=cuda.is_available())
 
     # 當轉譯完成後停止 loading 動畫
     result = await task
@@ -71,7 +74,7 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
 
 async def main():
     media_path = './speech_2_text/media/'
-    filename = 'stock_news.mp3'
+    filename = 'improve-self-control.mp3'
     
     # 如果有 cache 就直接讀取 cache
     if Path(media_path+'cache.pkl').exists():

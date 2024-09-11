@@ -5,10 +5,10 @@ from langchain_core.prompts import ChatPromptTemplate
 import dotenv
 import os
 
-map_prompt = ChatPromptTemplate.from_messages(
-    [("system", "Write a concise summary of the following:\\n\\n{context}")]
-)
+map_prompt = hub.pull("rlm/map-prompt")
+
 dotenv.load_dotenv(override=True)
 llm = ChatAnthropic(model=os.getenv("ANTHROPIC_LLM_MODEL"), temperature=0.3)
 
 map_chain = map_prompt | llm | StrOutputParser()
+
