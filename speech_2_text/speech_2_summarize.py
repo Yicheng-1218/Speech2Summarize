@@ -1,34 +1,50 @@
-import dotenv
+from dotenv import load_dotenv
 import os
 import whisper
 import asyncio
-from pathlib import Path
 import itertools
-import pickle
+import json
 from langchain.prompts import PromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
 from torch import cuda
+import warnings
+
+
+warnings.filterwarnings("ignore")
 
 ffmpeg_path = "./speech_2_text/ffmpeg/bin"
 model_path = "./speech_2_text/models"
 
 # 讀取環境變數
-dotenv.load_dotenv(override=True)
+load_dotenv(override=True)
 os.environ['PATH'] += os.pathsep + ffmpeg_path
 
 # 讀取 Whisper 模型
 whisper_model = whisper.load_model('base',download_root=model_path)
 
 # LLM 模型
-model=ChatAnthropic(model=os.getenv('ANTHROPIC_LLM_MODEL'),temperature=0.3)
+model=ChatAnthropic(model=os.getenv('ANTHROPIC_LLM_MODEL'),temperature=0)
 prompt = PromptTemplate.from_template("""
-    Please summarize the following text between ``` and respond in zh-TW. 
-    Only summary is needed dont't ask any questions.
+    請總結<text>中的內容，並遵循以下步驟：
+    1、將內容轉換成繁體中文。
+    2、想一個最適合的標題。
+    3、將內容中的錯字進行修正。
+    4、將內容整合成段落格式，並增加易讀性。
+    5、一個段落之前加上一個小標題，並在小標題後加上冒號。
+    5、除了正文的內容外，不要說明任何其他事情。
     
+    輸出請匹配以下格式
     ```
+    標題:
+    <title>
+    內容總結:
+    <summary>
+    ```
+    
+    <text>
     {text}
-    ```
+    </text>
     """)
 chain=prompt|model|StrOutputParser()
 
@@ -46,8 +62,8 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
         dict[str, str | list]: 轉譯結果
     """
     assert os.path.exists(audio_path), f"Audio file not found: {audio_path}"
-    print(f"開始轉譯 {audio_path}...")
-
+    filename = os.path.basename(audio_path)
+    print(f"開始轉譯 {filename}")
     async def show_loading():
         for frame in itertools.cycle(['.  ', '.. ', '...']):
             print(f'\rLoading {frame}', end='', flush=True)
@@ -58,6 +74,7 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
     task = asyncio.to_thread(
         whisper_model.transcribe,
         audio_path,
+        initial_prompt='轉譯成繁體中文',
         language=language,
         fp16=cuda.is_available())
 
@@ -67,19 +84,19 @@ async def transcribe_audio(audio_path, language='zh',save_path=None):
 
     print('\r轉譯完成!')
     if save_path:
-        pickle.dump(result, open(save_path+'cache.pkl', 'wb'))
+        json.dump(result, open(save_path+filename.replace('.mp3','.json'), 'w',encoding='utf-8'), ensure_ascii=False)
     return result
 
 
 
 async def main():
     media_path = './speech_2_text/media/'
-    filename = 'improve-self-control.mp3'
-    
+    filename = input('請輸入音訊檔名稱 (包含副檔名)：')
+    cache_path = media_path+filename.replace('.mp3','.json')
     # 如果有 cache 就直接讀取 cache
-    if Path(media_path+'cache.pkl').exists():
+    if os.path.exists(cache_path):
         print('找到 cache，直接讀取')
-        result = pickle.load(open(media_path+'cache.pkl','rb'))
+        result = json.load(open(cache_path,'r',encoding='utf-8'))
     else:
         # 若無 cache 則進行轉譯
         result = await transcribe_audio(

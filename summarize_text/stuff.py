@@ -2,11 +2,11 @@ from langchain.prompts import ChatPromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.document_loaders import WebBaseLoader
-import dotenv
+from dotenv import load_dotenv
 import requests
 import os
 
-dotenv.load_dotenv(override=True)
+load_dotenv(override=True)
 
 # 資策會維基百科、機器學習維基百科
 web_pages=["https://zh.wikipedia.org/wiki/%E8%B3%87%E8%A8%8A%E5%B7%A5%E6%A5%AD%E7%AD%96%E9%80%B2%E6%9C%83",'https://zh.wikipedia.org/wiki/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0']

@@ -1,4 +1,13 @@
 # DocsAgent
 
 ## speech_2_text
-[ffmpeg](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z)
+You need to install ffmpeg in the following directory: speech_2_text
+[ffmpeg](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z)  
+
+Make sure the directory structure should be as follows:  
+speech_2_text  
+|_ffmpeg
+    |_bin
+        |_ffmpeg.exe
+        |_ffplay.exe
+        |_ffprobe.exe

@@ -4,3 +4,6 @@ langchain-openai
 openai-whisper
 langchain-community
 langchain-anthropic
+fastapi
+uvicorn
+pytubefix
