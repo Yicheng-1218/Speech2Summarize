@@ -1,0 +1,1 @@
+from .speech_2_summarize import SpeechSummarizer

@@ -4,6 +4,7 @@ langchain-openai
 openai-whisper
 langchain-community
 langchain-anthropic
+pytubefix
 fastapi
 uvicorn
-pytubefix
+python-multipart
