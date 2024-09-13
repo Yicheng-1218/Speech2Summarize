@@ -10,8 +10,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
 from torch import cuda
 from dotenv import load_dotenv
-
-from . import yt_tool
+import yt_tool
 
 warnings.filterwarnings("ignore")
 

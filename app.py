@@ -1,4 +1,4 @@
-from fastapi import FastAPI,UploadFile, File,Form,HTTPException
+from fastapi import FastAPI,UploadFile, File,Form,HTTPException,BackgroundTasks
 from pydantic import BaseModel,HttpUrl
 from dotenv import load_dotenv
 from speech_2_text import SpeechSummarizer
@@ -77,4 +77,5 @@ async def perform_transcription(source: Union[UploadFile, HttpUrl]):
 if __name__ == "__main__":
     import uvicorn
     
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    #@ reload=True 會在代碼更改時自動重啟服務器，正式環境中應該設置為 False
+    uvicorn.run(app, host="127.0.0.1", port=8000 ,reload=True)
