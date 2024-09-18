@@ -1,7 +1,8 @@
 # DocsAgent
 
 ## speech_2_text
-You need to install ffmpeg in the following directory: speech_2_text  
+
+If you are using Windows system, you need to install ffmpeg in the following directory: speech_2_text  
 [ffmpeg download](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z)  
 
 Make sure the directory structure should be as follows:  
@@ -13,3 +14,10 @@ speech_2_text
         ├── ffplay.exe
         └── ffprobe.exe  
 </pre>
+
+Spin up the containers:
+
+```sh
+$ docker-compose up -d --build
+```
+

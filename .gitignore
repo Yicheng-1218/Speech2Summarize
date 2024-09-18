@@ -152,11 +152,12 @@ coverage/
 **/build/
 
 # whisper models
-speech_2_text/models/*
-!speech_2_text/models/put_model_here.txt
+project/speech_2_text/models/*
+!project/speech_2_text/models/put_model_here.txt
 
 # media floder
-speech_2_text/media/*
-!speech_2_text/media/put_media_here.txt
+project/speech_2_text/media/*
+!project/speech_2_text/media/put_media_here.txt
+project/uploaded_files/*
 
 

@@ -8,3 +8,7 @@ pytubefix
 fastapi
 uvicorn
 python-multipart
+celery
+redis
+flower
+Jinja2
