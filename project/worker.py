@@ -60,11 +60,20 @@ def perform_transcription(self, temp_path: str) -> tuple[str, str]:
             lambda current, total: 
                 self.update_state(
                     state='PROGRESS',
-                    meta={'current': round(current/total*99)}
+                    meta={
+                        'message': '語音轉譯中...',
+                        'current': round(current/total*95)
+                        }
                 ))
         
         #調用 SpeechSummarizer 進行音訊轉譯
         transcription = summarizer.transcribe_audio(temp_path)
+        self.update_state(
+            state='PROGRESS',
+            meta={
+                'message': '語音轉譯完成，正在生成摘要...',
+                'current': 99
+                })
         summary = summarizer.summarize_text(transcription['text'])
         
         return transcription['text'], summary

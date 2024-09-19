@@ -39,7 +39,7 @@ from pydantic import BaseModel,HttpUrl
 from celery.result import AsyncResult
 from dotenv import load_dotenv
 from typing import Union,Any
-from speech_2_text.yt_tool import download_audio_to_tempfile_async
+from speech_2_text.yt_tool import download_audio_to_tempfile
 from worker import perform_transcription
 import tempfile
 import os
@@ -64,17 +64,22 @@ class TranscriptionResponse(BaseModel):
 class CreateTask(BaseModel):
     message: str = "Task created successfully"
     task_id: str
-    
+
+class TaskStatus(BaseModel):
+    message: str
+    current: int
+
 class TaskResponse(BaseModel):
     task_id: str
     task_status: str
-    task_progress: Union[int, None] = None
+    task_progress: Union[TaskStatus, None] = None
     task_result: Union[Any, None] = None
 
 
 
 async def source_preprocess(source: Union[UploadFile, str]):
     temp_path = None
+    # TODO: 將io操作以及下載轉移至celery背景任務
     try:
         # 建立臨時文件
         with tempfile.NamedTemporaryFile(delete=False,dir='./uploaded_files',suffix='.mp3') as temp_file:
@@ -89,7 +94,7 @@ async def source_preprocess(source: Union[UploadFile, str]):
                 
             # 如果提供了 YouTube URL，則從 YouTube 下載音訊
             elif isinstance(source, str):
-                temp_path = await download_audio_to_tempfile_async(source,temp_file)
+                temp_path = download_audio_to_tempfile(source,temp_file)
 
             # 如果提供了無效的源類型
             else:
@@ -129,7 +134,10 @@ async def get_task_status(task_id: str):
         task_status=task_result.status,
     )
     if task_result.state == 'PROGRESS':
-        response.task_progress = task_result.info
+        response.task_progress = TaskStatus(
+            message=task_result.info.get('message', 'Processing...'),
+            current=task_result.info.get('current', 0)
+        )
     elif task_result.ready() and task_result.successful():
         text, summary = task_result.get()
         response.task_result = TranscriptionResponse(transcription=text, summary=summary)
