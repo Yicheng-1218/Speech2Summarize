@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>語音快速摘要處理工具</title>
+        <style>
+            body {
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+
+            h1 {
+                margin-top: 50px;
+            }
+
+            .button-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 100px;
+            }
+
+            .button {
+                width: 200px;
+                height: 200px;
+                margin: 0 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 20px;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .local-file {
+                background-color: #4A90E2;
+            }
+
+            .yt-link {
+                background-color: #7ED321;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h1>您好！歡迎使用語音快速摘要處理工具</h1>
+        <br>
+        <h2>請選擇您要輸入的語音檔案方式</h2>
+
+        <div class="button-container">
+            <a href="/transcribe/from-local" class="button local-file">使用本地音檔<br>請點我</a>
+            <a href="/transcribe/from-url" class="button yt-link">使用YouTube連結<br>請點我</a>
+        </div>
+
+    </body>
+
+</html>

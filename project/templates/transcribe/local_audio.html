@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>使用本地檔案上傳</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background-color: white;
+            }
+
+            .container {
+                max-width: 600px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #fcf9de;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+            .file-label {
+                padding: 15px 30px;
+                background-color: #8E6EF3;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .start {
+                padding: 15px 30px;
+                background-color: #8793dd;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #d4004b;
+            }
+
+            .description {
+                margin-top: 30px;
+                font-size: 14px;
+                color: #666;
+                line-height: 1.6;
+            }
+
+            .homebutton {
+                background-color: #8E6EF3;
+            }
+
+            button {
+                padding: 15px 30px;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            p {
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+            .loading-container {
+                display: none;
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 100;
+            }
+
+            .loading-spinner {
+                border: 16px solid #f3f3f3;
+                border-top: 16px solid #3498db;
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>線上語音轉譯及摘要生成工具</h1>
+        <div class="container">
+            <h1>請選擇要上傳的本地檔案</h1>
+            <form action="/api/transcribe/file" method="post" enctype="multipart/form-data">
+                <label for="file">選擇音檔：</label>
+                <input type="file" id="file-upload" name="file" accept="audio/*">
+
+                <button class="start" id="start-button" type="submit">Start ➔</button>
+
+                <div class="description">
+                    <p>上傳並轉錄您的音訊檔案。</p>
+                </div>
+            </form>
+            <!-- Loading 圈 -->
+            <div id="loading" class="loading-container">
+                <div class="loading-spinner"></div>
+            </div>
+            <div id="result"></div>
+
+        </div>
+        <div class="home"></div>
+        <a href="/transcribe">
+            <button class="homebutton">回首頁</button>
+        </a>
+        </div>
+
+        <script>
+            document.getElementById('start-button').addEventListener('click', async function (event) {
+                event.preventDefault();  // 阻止表單自動提交
+
+                const fileInput = document.getElementById('file-upload');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    alert("請選擇一個音訊檔案");
+                    return;
+                }
+                // 顯示 Loading 圈
+                document.getElementById("loading").style.display = "block";
+
+                const formData = new FormData();
+                formData.append("file", file);  // 正確地將文件添加到 formData
+
+                try {
+                    const response = await fetch("/transcribe/file", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    // 檢查是否成功
+                    if (response.ok) {
+                        const data = await response.json(); // 解析 JSON 響應
+                        // 顯示轉錄結果
+                        document.getElementById("result").innerHTML = `
+                        <h2>轉錄結果：</h2>
+                        <p><strong>轉錄：</strong> ${data.transcription}</p>
+                        <p><strong>摘要：</strong> ${data.summary}</p>
+                    `;
+                    } else {
+                        document.getElementById("result").textContent = "無法處理該檔案，請確認格式是否正確。";
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    document.getElementById("result").textContent = "發生錯誤，請稍後再試。";
+                } finally {
+                    // 隱藏 Loading 圈
+                    document.getElementById("loading").style.display = "none";
+                }
+            });
+        </script>
+
+    </body>
+
+</html>

@@ -34,7 +34,15 @@
     :=++**++=-:.-=-.         ..   :-==+++==-:         
 """
 
-from fastapi import FastAPI,UploadFile, File,Form,BackgroundTasks,HTTPException
+from fastapi import (
+    FastAPI,UploadFile, 
+    File,Form,
+    BackgroundTasks,
+    HTTPException,
+    APIRouter)
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.requests import Request
 from pydantic import BaseModel,HttpUrl
 from celery.result import AsyncResult
 from dotenv import load_dotenv
@@ -42,19 +50,37 @@ from typing import Union,Any
 from speech_2_text.yt_tool import download_audio_to_tempfile
 from worker import perform_transcription
 import tempfile
-import os
 import traceback
+
 
 # 載入環境變數
 load_dotenv()
 
 # 創建 FastAPI 應用
 app = FastAPI(openapi_tags=[{"name": "General"}])
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+# API Router
+api_router = APIRouter(prefix="/api")
 
 
-@app.get("/",tags=["General"])
-async def root():
-    return {"message": "Response from FastAPI"}
+# 模板路由
+
+# /transcribe/index -> 會渲染 transcribe/index.html
+@app.get("/transcribe/index")
+async def index_page(request: Request):
+    return templates.TemplateResponse("transcribe/index.html", {"request": request})
+
+# /transcribe/from-url -> 會渲染 transcribe/from_url.html
+@app.get("/transcribe/from-url")
+async def transcribe_from_url(request: Request):
+    return templates.TemplateResponse("transcribe/from_url.html", {"request": request})
+
+# /transcribe/from-local -> 會渲染 transcribe/local_audio.html
+@app.get("/transcribe/from-local")
+async def transcribe_from_local(request: Request):
+    return templates.TemplateResponse("transcribe/local_audio.html", {"request": request})
 
 
 class TranscriptionResponse(BaseModel):
@@ -110,23 +136,27 @@ async def source_preprocess(source: Union[UploadFile, str]):
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
     
+# API 路由
+@api_router.get("/",tags=["General"])
+async def api_root():
+    return {"message": "Response from FastAPI"}
 
-@app.post("/transcribe/file",tags=['Transcription'],response_model=CreateTask)
+@api_router.post("api/transcribe/file",tags=['Transcription'],response_model=CreateTask)
 async def transcribe_file(audio_file: UploadFile = File(...)) -> CreateTask:
     """從音訊文件中提取文字並生成摘要"""
     task = await source_preprocess(audio_file)
     return CreateTask(task_id=task.id)
     
 
-@app.post("/transcribe/url",tags=['Transcription'],response_model=CreateTask)
+@api_router.post("api/transcribe/url",tags=['Transcription'],response_model=CreateTask)
 async def transcribe_url(url: HttpUrl = Form(...))  -> CreateTask:
     """從 YouTube 影片中提取文字並生成摘要"""
     task = await source_preprocess(url.__str__())
     return CreateTask(task_id=task.id)
 
-@app.get("/task/{task_id}",tags=['General'],response_model=TaskResponse)
+@api_router.get("api/task/{task_id}",tags=['General'],response_model=TaskResponse)
 async def get_task_status(task_id: str):
-    """檢查任務的狀態"""
+    """檢查任務的狀態 分為PENDING、PROGRESS和SUCCESS"""
     
     task_result = AsyncResult(task_id)
     response = TaskResponse(
@@ -143,7 +173,9 @@ async def get_task_status(task_id: str):
         response.task_result = TranscriptionResponse(transcription=text, summary=summary)
         
     return response
-   
+
+
+
 
 if __name__ == "__main__":
     import uvicorn

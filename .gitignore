@@ -151,13 +151,38 @@ coverage/
 .gradle
 **/build/
 
-# whisper models
-project/speech_2_text/models/*
-!project/speech_2_text/models/put_model_here.txt
+# model files
+*.pth
+*.h5
+*.ckpt
+*.pb
+*.onnx
+*.tflite
+*.mlmodel
+*.caffemodel
+*.weights
+*.bin
+*.pkl
+*.joblib
+*.model
+*.pt
+*.hdf5
 
-# media floder
-project/speech_2_text/media/*
-!project/speech_2_text/media/put_media_here.txt
-project/uploaded_files/*
+
+# media
+!static/*
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.aac
+*.m4a
+*.wma
+*.aiff
+*.alac
+*.opus
+*.mid
+*.midi
+
 
 
