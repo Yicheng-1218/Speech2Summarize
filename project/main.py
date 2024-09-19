@@ -66,19 +66,18 @@ api_router = APIRouter(prefix="/api")
 
 
 # 模板路由
-
 # /transcribe/index -> 會渲染 transcribe/index.html
-@app.get("/transcribe/index")
+@app.get("/transcribe/index",tags=["Template"])
 async def index_page(request: Request):
     return templates.TemplateResponse("transcribe/index.html", {"request": request})
 
 # /transcribe/from-url -> 會渲染 transcribe/from_url.html
-@app.get("/transcribe/from-url")
+@app.get("/transcribe/from-url",tags=["Template"])
 async def transcribe_from_url(request: Request):
     return templates.TemplateResponse("transcribe/from_url.html", {"request": request})
 
 # /transcribe/from-local -> 會渲染 transcribe/local_audio.html
-@app.get("/transcribe/from-local")
+@app.get("/transcribe/from-local",tags=["Template"])
 async def transcribe_from_local(request: Request):
     return templates.TemplateResponse("transcribe/local_audio.html", {"request": request})
 
@@ -141,20 +140,20 @@ async def source_preprocess(source: Union[UploadFile, str]):
 async def api_root():
     return {"message": "Response from FastAPI"}
 
-@api_router.post("api/transcribe/file",tags=['Transcription'],response_model=CreateTask)
+@api_router.post("/transcribe/file",tags=['Transcription'],response_model=CreateTask)
 async def transcribe_file(audio_file: UploadFile = File(...)) -> CreateTask:
     """從音訊文件中提取文字並生成摘要"""
     task = await source_preprocess(audio_file)
     return CreateTask(task_id=task.id)
     
 
-@api_router.post("api/transcribe/url",tags=['Transcription'],response_model=CreateTask)
+@api_router.post("/transcribe/url",tags=['Transcription'],response_model=CreateTask)
 async def transcribe_url(url: HttpUrl = Form(...))  -> CreateTask:
     """從 YouTube 影片中提取文字並生成摘要"""
     task = await source_preprocess(url.__str__())
     return CreateTask(task_id=task.id)
 
-@api_router.get("api/task/{task_id}",tags=['General'],response_model=TaskResponse)
+@api_router.get("/task/{task_id}",tags=['General'],response_model=TaskResponse)
 async def get_task_status(task_id: str):
     """檢查任務的狀態 分為PENDING、PROGRESS和SUCCESS"""
     
@@ -175,7 +174,7 @@ async def get_task_status(task_id: str):
     return response
 
 
-
+app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn
