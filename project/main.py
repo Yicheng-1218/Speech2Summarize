@@ -164,7 +164,7 @@ async def get_task_status(task_id: str):
     )
     if task_result.state == 'PROGRESS':
         response.task_progress = TaskStatus(
-            message=task_result.info.get('message', 'Processing...'),
+            message=task_result.info.get('message', '任務啟動中...'),
             current=task_result.info.get('current', 0)
         )
     elif task_result.ready() and task_result.successful():

@@ -72,7 +72,7 @@ def perform_transcription(self, temp_path: str) -> tuple[str, str]:
             state='PROGRESS',
             meta={
                 'message': '語音轉譯完成，正在生成摘要...',
-                'current': 99
+                'current': 97
                 })
         summary = summarizer.summarize_text(transcription['text'])
         

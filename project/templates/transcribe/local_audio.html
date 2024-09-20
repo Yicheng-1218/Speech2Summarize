@@ -73,39 +73,8 @@
                 line-height: 1.6;
                 margin-bottom: 20px;
             }
-
-            .loading-container {
-                display: none;
-                position: fixed;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 100;
-            }
-
-            .loading-spinner {
-                border: 16px solid #f3f3f3;
-                border-top: 16px solid #3498db;
-                border-radius: 50%;
-                width: 120px;
-                height: 120px;
-                animation: spin 2s linear infinite;
-            }
-
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
-
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-
-            .hidden {
-                display: none;
-            }
         </style>
+        <link rel="stylesheet" href="/static/css/main.css">
     </head>
 
     <body>
@@ -122,10 +91,6 @@
                     <p>上傳並轉錄您的音訊檔案。</p>
                 </div>
             </form>
-            <!-- Loading 圈 -->
-            <div id="loading" class="loading-container">
-                <div class="loading-spinner"></div>
-            </div>
             <div id="result"></div>
 
         </div>
@@ -134,7 +99,7 @@
             <button class="homebutton">回首頁</button>
         </a>
         </div>
-
+        <script src="/static/js/main.js"></script>
         <script>
             document.getElementById('start-button').addEventListener('click', async function (event) {
                 event.preventDefault();  // 阻止表單自動提交
@@ -146,37 +111,14 @@
                     alert("請選擇一個音訊檔案");
                     return;
                 }
-                // 顯示 Loading 圈
-                document.getElementById("loading").style.display = "block";
+                // // 顯示 Loading 圈
+                // document.getElementById("loading").style.display = "block";
 
                 const formData = new FormData();
-                formData.append("file", file);  // 正確地將文件添加到 formData
+                formData.append("audio_file", file);  // 正確地將文件添加到 formData
+                // 發送 POST 請求到 /api/transcribe/file
+                transcribe("/api/transcribe/file", formData);
 
-                try {
-                    const response = await fetch("/transcribe/file", {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    // 檢查是否成功
-                    if (response.ok) {
-                        const data = await response.json(); // 解析 JSON 響應
-                        // 顯示轉錄結果
-                        document.getElementById("result").innerHTML = `
-                        <h2>轉錄結果：</h2>
-                        <p><strong>轉錄：</strong> ${data.transcription}</p>
-                        <p><strong>摘要：</strong> ${data.summary}</p>
-                    `;
-                    } else {
-                        document.getElementById("result").textContent = "無法處理該檔案，請確認格式是否正確。";
-                    }
-                } catch (error) {
-                    console.error("Error:", error);
-                    document.getElementById("result").textContent = "發生錯誤，請稍後再試。";
-                } finally {
-                    // 隱藏 Loading 圈
-                    document.getElementById("loading").style.display = "none";
-                }
             });
         </script>
 

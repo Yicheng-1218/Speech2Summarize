@@ -92,25 +92,38 @@ class SpeechSummarizer:
     
     def _setup_prompt_chain(self):
         prompt = PromptTemplate.from_template("""
-            請總結<text>中的內容，並遵循以下步驟：
-            1、將內容轉換成繁體中文。
-            2、想一個最適合的標題。
-            3、將內容中的錯字進行修正。
-            4、將內容整合成段落格式，並增加易讀性。
-            5、一個段落之前加上一個小標題，並在小標題後加上冒號。
-            6、除了正文的內容外，不要說明任何其他事情。
+            Please summarize the content in <text> and follow the steps starting with ####:
+                #### 1. Always respond in zh-tw.
+                #### 2. Correct any typos in the content.
+                #### 3. Do not provide any information other than the main text content.
+                #### 4. Summarize the content according to the Care Management Assessment Scale\
+                        (ADLs, IADLs, Special Complex Care Needs, Home Environment and Social Participation,\
+                        Emotional and Behavioral Patterns, Primary Caregiver Burden,\
+                        Primary Caregiver Work and Support).
+                #### 5. Ensure that HTML <br> tags are used for new lines instead of "\n".
+                
+                #### 6. Fill in your summary using the following format:
+                <h3>1. 個案基本資料(含疾病史):</h3>
+                <p><AI's brief response></p>
+                
+                <h3>2. 生理/心理狀況:</h3>
+                <p><AI's detailed response></p>
+
+                <h3>3. 經濟狀況:</h3>
+                <p><AI's brief response></p>
+                
+                <h3>4. 家庭支持狀況:</h3>
+                <p><AI's brief response></p>
+                
+                <h3>5. 期待得到的服務:</h3> <if available>
+                <p><AI's brief response></p>
+                
+                <text>
+                {text}
+                </text>
             
-            輸出請匹配以下格式
-            
-            標題:
-            <title>
-            內容總結:
-            <summary>
-            
-            
-            <text>
-            {text}
-            </text>
+            Your answer (start with 1.個案基本資料(含疾病史)):
+
             """)
         self.chain = prompt | self.llm_model | StrOutputParser()
 

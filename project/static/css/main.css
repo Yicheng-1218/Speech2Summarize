@@ -1,0 +1,28 @@
+.progress-bar {
+    width: 100%;
+    height: 22px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress-inner {
+    width: 0;
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: -21px;
+    /* 調整 margin 讓文字位於進度條之上 */
+    position: relative;
+    z-index: 1;
+    /* 確保文字在上方可見 */
+}
+
+#result {
+    text-align: left;
+}
