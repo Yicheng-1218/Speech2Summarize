@@ -66,6 +66,11 @@ api_router = APIRouter(prefix="/api")
 
 
 # 模板路由
+# /transcribe/introduction -> 會渲染 transcribe/introduction.html
+@app.get("/transcribe/introduction",tags=["Template"])
+async def introduction_page(request: Request):
+    return templates.TemplateResponse("transcribe/introduction.html", {"request": request})
+
 # /transcribe/index -> 會渲染 transcribe/index.html
 @app.get("/transcribe/index",tags=["Template"])
 async def index_page(request: Request):

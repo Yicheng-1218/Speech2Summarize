@@ -1,60 +1,80 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>語音快速摘要處理工具</title>
-        <style>
-            body {
-                text-align: center;
-                font-family: Arial, sans-serif;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>語音快速摘要處理工具</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
 
-            h1 {
-                margin-top: 50px;
-            }
+        h1, h2 {
+            margin: 20px 0;
+        }
 
-            .button-container {
-                display: flex;
-                justify-content: center;
-                margin-top: 100px;
-            }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
 
-            .button {
-                width: 200px;
-                height: 200px;
-                margin: 0 20px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                text-decoration: none;
-            }
+        .button-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 100px; /* 增加左右間距 */
+        }
 
-            .local-file {
-                background-color: #4A90E2;
-            }
+        .button {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 100px;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #4A90E2;
+            border-radius: 50%;
+        }
 
-            .yt-link {
-                background-color: #7ED321;
-            }
-        </style>
-    </head>
+        .introduction {
+            color: #4A90E2;
+            margin-top: 50px;
+        }
+    </style>
+</head>
 
-    <body>
+<body>
 
-        <h1>您好！歡迎使用語音快速摘要處理工具</h1>
-        <br>
-        <h2>請選擇您要輸入的語音檔案方式</h2>
+    <h1>第一步：選擇音訊來源轉譯方式</h1>
+    <h2>請選擇您想要使用「電腦中」的音檔上傳 或是 使用「YouTube連結」來轉譯</h2>
 
-        <div class="button-container">
-            <a href="/transcribe/from-local" class="button local-file">使用本地音檔<br>請點我</a>
-            <a href="/transcribe/from-url" class="button yt-link">使用YouTube連結<br>請點我</a>
+    <div class="button-container">
+        <div class="button-item">
+            <a href="/transcribe/from-local" class="button local-file">&#128266;</a>
+            <h1>使用本地音檔<br>請點我</h1>
         </div>
+        <div class="button-item">
+            <a href="/transcribe/from-url" class="button yt-link">&#127916;</a>
+            <h1>使用YouTube連結<br>請點我</h1>
+        </div>
+    </div>
 
-    </body>
+    <a href="/transcribe/introduction" class="introduction">&#128073 回歡迎頁請點我 &#128072</a>
+
+</body>
 
 </html>
