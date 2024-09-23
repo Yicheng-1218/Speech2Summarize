@@ -1,127 +1,143 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>使用本地檔案上傳</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                background-color: white;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用本地檔案上傳</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-            .container {
-                max-width: 600px;
-                margin: 50px auto;
-                padding: 20px;
-                background-color: #fcf9de;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
 
-            h1 {
-                color: #333;
-                margin-bottom: 20px;
-            }
+        img {
+            width: 300px;
+            height: 300px;
+            animation: float 3s ease-in-out infinite;
+        }
 
-            .file-label {
-                padding: 15px 30px;
-                background-color: #8E6EF3;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
+        @keyframes float {
+            0% {
+                transform: translateY(0);
             }
-
-            .start {
-                padding: 15px 30px;
-                background-color: #8793dd;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
+            50% {
+                transform: translateY(-20px);
             }
-
-            button:hover {
-                background-color: #d4004b;
+            100% {
+                transform: translateY(0);
             }
+        }
 
-            .description {
-                margin-top: 30px;
-                font-size: 14px;
-                color: #666;
-                line-height: 1.6;
-            }
 
-            .homebutton {
-                background-color: #8E6EF3;
-            }
+        .content-container {
+            max-width: 600px;
+            margin: 50px;
+            padding: 20px;
+            background-color: #fcf9de;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-            button {
-                padding: 15px 30px;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-            }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-            p {
-                line-height: 1.6;
-                margin-bottom: 20px;
-            }
-        </style>
-        <link rel="stylesheet" href="/static/css/main.css">
-    </head>
+        .file-label {
+            padding: 15px 30px;
+            background-color: #8E6EF3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-    <body>
-        <h1>線上語音轉譯及摘要生成工具</h1>
-        <div class="container">
-            <h1>請選擇要上傳的本地檔案</h1>
+        .start {
+            padding: 15px 30px;
+            background-color: #8793dd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .start:hover {
+            background-color: #6a79b3;
+        }
+
+        .description {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .homebutton {
+            outline: none;
+            font-size: 1rem;
+            color: rgb(87, 83, 83);
+            padding: 10px 20px;
+            border: 0;
+            border-bottom: 6px solid #e6a772;
+            border-radius: 5px;
+            background-color: #f9d53e;
+        }
+
+        button {
+            padding: 15px 30px;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- 機器人動畫 -->
+        <div class="img">
+            <img src="/static/cute_robot_image.png" alt="機器人">
+        </div>
+
+        <div class="content-container">
+            <h1>第二步：選擇電腦中的音訊檔案</h1>
+            <h1>請點擊下方「選擇檔案」按鈕<br>來選擇要上傳的音訊檔案</h1>
             <form action="/api/transcribe/file" method="post" enctype="multipart/form-data">
                 <label for="file">選擇音檔：</label>
                 <input type="file" id="file-upload" name="file" accept="audio/*">
-
                 <button class="start" id="start-button" type="submit">Start ➔</button>
-
-                <div class="description">
-                    <p>上傳並轉錄您的音訊檔案。</p>
-                </div>
             </form>
-            <div id="result"></div>
-
+            <div class="description">
+                <p>選擇完畢後點擊上方 Start ➔ 按鈕來轉譯您的音訊檔案。</p>
+            </div>
+            <a href="/transcribe/index">
+                <button class="homebutton">回上一頁</button>
+            </a>
         </div>
-        <div class="home"></div>
-        <a href="/transcribe/index">
-            <button class="homebutton">回首頁</button>
-        </a>
-        </div>
-        <script src="/static/js/main.js"></script>
-        <script>
-            document.getElementById('start-button').addEventListener('click', async function (event) {
-                event.preventDefault();  // 阻止表單自動提交
-
-                const fileInput = document.getElementById('file-upload');
-                const file = fileInput.files[0];
-
-                if (!file) {
-                    alert("請選擇一個音訊檔案");
-                    return;
-                }
-                // // 顯示 Loading 圈
-                // document.getElementById("loading").style.display = "block";
-
-                const formData = new FormData();
-                formData.append("audio_file", file);  // 正確地將文件添加到 formData
-                // 發送 POST 請求到 /api/transcribe/file
-                transcribe("/api/transcribe/file", formData);
-
-            });
-        </script>
-
-    </body>
+    </div>
+</body>
 
 </html>

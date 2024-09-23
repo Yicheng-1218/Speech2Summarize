@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>這是歡迎頁</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .text {
+            margin-left: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        img {
+            width: 300px;
+            height: 300px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            outline: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            padding: 10px 20px;
+            border: 0;
+            border-bottom: 6px solid #e6a772;
+            border-radius: 5px;
+            background-color: #f9d53e;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <img src="/static/cute_robot_image.png" alt="這是機器人">
+        <div class="text">
+            <h1>嗨！歡迎來到語音魔法世界 🎉</h1>
+            <h1>我們可以快速將您的音訊轉換為文字<br>還能抓出重點進行摘要，超方便！<br>
+            您可以選擇上傳「個人音檔」或提供「YouTube 連結」
+            <br>來進行轉換，讓我們幫您省時省力✨<br>
+            點擊下方的按鈕，立即體驗語音轉文字的魅力吧！</h1>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="/transcribe/index" class="button">開始使用</a>
+    </div>
+
+</body>
+
+</html>
