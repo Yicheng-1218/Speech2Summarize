@@ -16,12 +16,12 @@
             align-items: center;
         }
 
-        .main-container {
+        .robotcontainer {
             display: flex;
-            justify-content: center;
+            justify-content: space-between; 
             align-items: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
         }
 
         img {
@@ -43,8 +43,9 @@
         }
 
 
-        .content-container {
-            max-width: 600px;
+        .container {
+            width: 100%; /* 使內容框撐滿容器 */
+            max-width: 800px; /*  */
             margin: 50px;
             padding: 20px;
             background-color: #fcf9de;
@@ -113,16 +114,17 @@
             margin-bottom: 20px;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 
 <body>
-    <div class="main-container">
+    <div class="robotcontainer">
         <!-- 機器人動畫 -->
         <div class="img">
             <img src="/static/cute_robot_image.png" alt="機器人">
         </div>
 
-        <div class="content-container">
+        <div class="container">
             <h1>第二步：選擇電腦中的音訊檔案</h1>
             <h1>請點擊下方「選擇檔案」按鈕<br>來選擇要上傳的音訊檔案</h1>
             <form action="/api/transcribe/file" method="post" enctype="multipart/form-data">
@@ -138,6 +140,29 @@
             </a>
         </div>
     </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        document.getElementById('start-button').addEventListener('click', async function (event) {
+            event.preventDefault();  // 阻止表單自動提交
+
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("請選擇一個音訊檔案");
+                return;
+            }
+            // // 顯示 Loading 圈
+            // document.getElementById("loading").style.display = "block";
+
+            const formData = new FormData();
+            formData.append("audio_file", file);  // 正確地將文件添加到 formData
+            // 發送 POST 請求到 /api/transcribe/file
+            transcribe("/api/transcribe/file", formData);
+
+        });
+    </script>
+
 </body>
 
 </html>
