@@ -1,6 +1,6 @@
-# DocsAgent
+# Speech2Summarize
 
-DocsAgent is an application based on speech-to-text technology, designed to assist with document processing through audio handling and text generation. This project uses Docker containerization for deployment and supports multi-platform environments.
+Speech to Summarize is an application based on speech-to-text technology, designed to assist with document processing through audio handling and text generation. This project uses Docker containerization for deployment and supports multi-platform environments.
 
 ### Features
 
