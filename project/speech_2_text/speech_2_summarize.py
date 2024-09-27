@@ -12,11 +12,6 @@ from langchain_core.output_parsers import StrOutputParser
 from torch import cuda
 from dotenv import load_dotenv
 
-try:
-    import yt_tool
-except ImportError:
-    from . import yt_tool
-
 warnings.filterwarnings("ignore")
 
 
@@ -57,7 +52,7 @@ class SpeechSummarizer:
             
         特別注意該on_progress的callback函數的參數必須是兩個，分別是當前進度和總進度
         
-        Instantiate:
+        Example:
         .. code-block:: python
 
             from speech_2_text import SpeechSummarizer
@@ -79,13 +74,10 @@ class SpeechSummarizer:
         
         
     def register_on_progress_callback(self, func: Callable[[int, int], None]):
-        """Register a progress callback function post initialization.
+        """註冊進度條回調函數
 
-        :param callable func:
-            A callback function that takes ``current`` and ``total`` as parameters.
-
-        :rtype: None
-
+        Args:
+            func (Callable[[int, int], None]): 進度條回調函數，參數分別是當前進度和總進度
         """
         self.on_progress = func
     
@@ -93,16 +85,17 @@ class SpeechSummarizer:
     def _setup_prompt_chain(self):
         prompt = PromptTemplate.from_template("""
             Please summarize the content in <text> and follow the steps starting with ####:
-                #### 1. Always respond in zh-tw.
-                #### 2. Correct any typos in the content.
-                #### 3. Do not provide any information other than the main text content.
-                #### 4. Summarize the content according to the Care Management Assessment Scale\
+                #### 1. If the content is not fitting for the Care Management Assessment Scale, please say you cannot summarize it.
+                #### 2. Always respond in zh-tw.
+                #### 3. Correct any typos in the content.
+                #### 4. Do not provide any information other than the main text content.
+                #### 5. Summarize the content according to the Care Management Assessment Scale\
                         (ADLs, IADLs, Special Complex Care Needs, Home Environment and Social Participation,\
                         Emotional and Behavioral Patterns, Primary Caregiver Burden,\
                         Primary Caregiver Work and Support).
-                #### 5. Ensure that HTML <br> tags are used for new lines instead of "\n".
+                #### 6. Ensure that HTML <br> tags are used for new lines instead of "\n".
                 
-                #### 6. Fill in your summary using the following format:
+                #### 7. Fill in your summary using the following format:
                 <h3>1. 個案基本資料(含疾病史):</h3>
                 <p><AI's brief response></p>
                 
@@ -155,13 +148,6 @@ class SpeechSummarizer:
         if save_path:
             self._save_result(result, save_path, filename)
         return result
-        
-
-    async def transcribe_audio_async(self, audio_path: str, language: str = 'zh', save_path: Optional[str] = None) -> dict:
-        """異步版本的音訊轉譯方法"""
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(None, self.transcribe_audio, audio_path, language, save_path)
-        return result
 
     def _save_result(self, result: dict, save_path: str, filename: str):
         """保存轉譯結果到 JSON 文件"""
@@ -173,44 +159,3 @@ class SpeechSummarizer:
     def summarize_text(self, text: str) -> str:
         """使用語言模型總結文字"""
         return self.chain.invoke({'text': text})
-
-    def process_local_audio(self, filename: str) -> str:
-        """處理本地音訊文件"""
-        audio_path = os.path.join(media_path, filename)
-        cache_path = audio_path.replace('.mp3', '.json')
-
-        if os.path.exists(cache_path):
-            print('找到 cache，直接讀取')
-            with open(cache_path, 'r', encoding='utf-8') as f:
-                result = json.load(f)
-        else:
-            result = self.transcribe_audio(audio_path, save_path=media_path)
-
-        return self.summarize_text(result['text'])
-
-    def process_youtube_video(self, url: str) -> str:
-        """處理 YouTube 視頻"""
-        print('\r\n開始下載音訊檔...')
-        filename = os.path.basename(yt_tool.download_audio(url,media_path))
-        return self.process_local_audio(filename)
-
-
-# 自訂進度條回調函數
-def on_progress(current,total):
-    percent = current / total * 100
-    print(f'進度: {percent:.2f}%')
-
-if __name__ == '__main__':
-    os.chdir(os.path.dirname(__file__)+'/..')
-    summarizer = SpeechSummarizer(on_progress=on_progress)
-    mode_choice = input('使用本地音檔請輸入1 , 使用 YouTube 影片請輸入2：')
-    summary = ''
-    if mode_choice == '1':
-        filename = input('請輸入音訊檔名稱 (包含副檔名)：')
-        summary = summarizer.process_local_audio(filename)
-    elif mode_choice == '2':
-        url = input('請輸入 YouTube 影片網址：')
-        summary = summarizer.process_youtube_video(url)
-    else:
-        print("無效的選擇")
-    print(summary)

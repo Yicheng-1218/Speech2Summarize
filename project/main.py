@@ -37,7 +37,6 @@
 from fastapi import (
     FastAPI,UploadFile, 
     File,Form,
-    BackgroundTasks,
     HTTPException,
     APIRouter)
 from fastapi.templating import Jinja2Templates
@@ -47,11 +46,9 @@ from pydantic import BaseModel,HttpUrl
 from celery.result import AsyncResult
 from dotenv import load_dotenv
 from typing import Union,Any
-from speech_2_text.yt_tool import download_audio_to_tempfile
 from worker import perform_transcription
-import tempfile
 import traceback
-
+import base64
 
 # 載入環境變數
 load_dotenv()
@@ -108,30 +105,15 @@ class TaskResponse(BaseModel):
 
 
 async def source_preprocess(source: Union[UploadFile, str]):
-    temp_path = None
-    # TODO: 將io操作以及下載轉移至celery背景任務
+    """處理音訊源文件"""
     try:
-        # 建立臨時文件
-        with tempfile.NamedTemporaryFile(delete=False,dir='./uploaded_files',suffix='.mp3') as temp_file:
-            # 如果有上傳音訊檔，將音訊寫入臨時文件
-            if hasattr(source, 'filename') and source.filename.endswith('.mp3'):
-                audio = await source.read()
-                temp_file.write(audio)
-                
-                # 確保所有數據都被寫入磁盤
-                temp_file.flush()
-                temp_path = temp_file.name
-                
-            # 如果提供了 YouTube URL，則從 YouTube 下載音訊
-            elif isinstance(source, str):
-                temp_path = download_audio_to_tempfile(source,temp_file)
-
-            # 如果提供了無效的源類型
-            else:
-                raise ValueError("Invalid source type")
-        
+        if hasattr(source, 'filename'):
+            file_content = await source.read()
+            # 將二進制內容轉換為 base64 編碼
+            source = 'data:audio/mpeg;base64,'+base64.b64encode(file_content).decode('utf-8')
+            
         # 調用 Celery 任務執行音訊轉錄
-        return perform_transcription.delay(temp_path)
+        return perform_transcription.delay(source)
                 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -167,7 +149,9 @@ async def get_task_status(task_id: str):
         task_id=task_id,
         task_status=task_result.status,
     )
-    if task_result.state == 'PROGRESS':
+    if task_result.state == 'PENDING':
+        response.task_progress = TaskStatus(message='任務等待執行...', current=0)
+    elif task_result.state == 'PROGRESS':
         response.task_progress = TaskStatus(
             message=task_result.info.get('message', '任務啟動中...'),
             current=task_result.info.get('current', 0)

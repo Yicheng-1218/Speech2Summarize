@@ -30,7 +30,7 @@ async function transcribe(api, data) {
 
                 switch (statusData.task_status) {
                     case 'PENDING':
-                        progressText.textContent = '等待處理中...';
+                        progressText.textContent = statusData.task_progress.message;
                         break;
                     case 'PROGRESS':
                         const progress = statusData.task_progress.current;
@@ -45,6 +45,11 @@ async function transcribe(api, data) {
                             <p><strong>轉錄：</strong> ${statusData.task_result.transcription}</p>
                             <div id="summary">${statusData.task_result.summary}</div>
                         `;
+                        break;
+                    case 'FAILURE':
+                        clearInterval(checkStatus);
+                        progressBar.remove();
+                        document.getElementById('result').textContent = '轉錄失敗，請稍後再試。';
                         break;
                 }
             }, 1000);
