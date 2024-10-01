@@ -1,89 +1,375 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>這是歡迎頁</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Speech2Summarize</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
 
-        .container {
-            display: flex;
-            align-items: center;
-            margin-top: 50px;
-        }
+  <!-- Favicons -->
+  <link href="../../static/img/favicon.png" rel="icon">  <!-- 頁籤上icon  -->
 
-        .text {
-            margin-left: 20px;
-            font-size: 18px;
-            text-align: center;
-        }
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        img {
-            width: 300px;
-            height: 300px;
-            animation: float 3s ease-in-out infinite;
-        }
+  <!-- Vendor CSS Files -->
+  <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../static/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            outline: none;
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            padding: 10px 20px;
-            border: 0;
-            border-bottom: 6px solid #e6a772;
-            border-radius: 5px;
-            background-color: #f9d53e;
-        }
-    </style>
+  <!-- Main CSS File -->
+  <link href="../../static/css/index_main.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="index-page">
 
-    <div class="container">
-        <img src="/static/cute_robot_image.png" alt="這是機器人">
-        <div class="text">
-            <h1>嗨！歡迎來到語音魔法世界 🎉</h1>
-            <h1>我們可以快速將您的音訊轉換為文字<br>還能抓出重點進行摘要，超方便！<br>
-            您可以選擇上傳「個人音檔」或提供「YouTube 連結」
-            <br>來進行轉換，讓我們幫您省時省力✨<br>
-            點擊下方的按鈕，立即體驗語音轉文字的魅力吧！</h1>
+    <!-- 頁籤 -->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+      <a href="introduction.html" class="logo d-flex align-items-center me-auto">
+        <h1 class="sitename">AI 語音摘要助理</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">首頁</a></li>
+          <li><a href="#about">關於我們</a></li>
+          <li><a href="#services">產品服務</a></li>
+          <li><a href="#portfolio">產品畫面</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      <a href="/transcribe/index" class="btn-getstarted">快速開始</a>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- 首頁 -->
+    <section id="hero" class="hero section dark-background">
+
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
+            <h1>AI 語音摘要助理</h1>
+            <br><h2>告別繁瑣筆記，會議訪談輕鬆錄<br>摘要生成超快速，一鍵搞定！</h2>
+            <p>我們可以快速將您的音訊檔案轉換為文字，還能進一步抓出重點進行摘要，點擊下方的按鈕，立即體驗語音摘要生成工具吧！</p>
+            <div class="d-flex">
+              <a href="/transcribe/index" class="btn-get-started">快速開始</a>
+            </div>
+          </div>
+          <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="200">
+            <img src="../../static/img/cute_robot_image.png" class="img-fluid animated" alt="">
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 關於我們 -->
+    <section id="about" class="services section light-background">
+
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-sm-6 col-md-5 col-lg-6">
+            <h2>傳統語音摘要模式</h2>
+            <br>
+            <p>人工聽音檔→打成書面文字→畫重點→手動摘要</p>
+            <p>費時、費力、工作效率不佳</p>
+          </div>
+          
+          <div class="col-sm-6 col-md-5 col-lg-6">
+            <h2>AI 語音摘要助理</h2>
+            <br>
+            <p>選擇音檔 / Youtube 連結→一鍵生成摘要報告</p>
+            <p>省時、省力、提升工作效率</p>
+          </div>
+
+          <div class="col-sm-6 col-md-5 col-lg-6">
+            <img src="../../static/img/no.png" weight="130" height="130">
+          </div>
+
+          <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
+            <img src="../../static/img/oneok.png" weight="130" height="130">
+          </div>
+
+          <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
+            <img src="../../static/img/slow.png" weight="300" height="200">
+          </div>
+          <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
+            <img src="../../static/img/fast.png" weight="250" height="200">
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="container section-title" data-aos="fade-up">
+          <h2>適用情境</h2>
+        </div>
+  
+        <div class="row gy-4">
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <img src="../../static/img/text-to-speech.png" weight="300" height="200">
+              <h4><class="stretched-link">已有會議/訪談的音檔<br>需要轉換成文字檔</a></h4>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+              <img src="../../static/img/priority.png" weight="300" height="200">
+              <h4><class="stretched-link">有大量音檔資料<br>想快速知道重點摘要</a></h4>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <img src="../../static/img/music.png" weight="300" height="200">
+              <h4><class="stretched-link">在Youtube上<br>找到喜歡的影片<br>想將音檔轉譯成文字</a></h4>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item position-relative">
+              <img src="../../static/img/nlp01.png" weight="300" height="200">
+              <h4><class="stretched-link">想將Youtube上<br>大量的學習音檔<br>生成摘要方便閱讀</a></h4>
+            </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 關於我們的產品 -->
+    <section id="about" class="about section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>關於我們的產品</h2>
+      </div>
+
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+            <p>
+              我們的語音摘要生成工具利用先進的 AI 人工智慧技術，為您提供精確、高效的語音轉譯與自動摘要生成服務。無論您是需要會議紀錄、訪談整理，或是音訊內容文字化，我們的系統都能快速完成。
+            </p>
+            <ul>
+              <li><i class="bi bi-check2-circle"></i> <span>省時：不必再人工聽音檔打字</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>省力：一鍵生成語音內容摘要</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>省心：轉譯正確率高達 93.35% 能安心閱讀摘要內容</span></li>
+            </ul>
+          </div>
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon-container">
+              <img src="../../static/img/implementation.png" weight="300" height="200">
+              <span class="arrow">&#8594;</span>
+              <img src="../../static/img/approved.png" weight="300" height="200">
+            </div>
+          </div>
+          <div class="container mt-5">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>音檔名稱</th>
+                        <th>長照訪談個案_CMS 6</th>
+                        <th>長照訪談個案_CMS 5</th>
+                        <th>長照訪談_現場照護人員</th>
+                        <th>長照訪談_現場照護人員</th>
+                        <th>長照訪談_現場文書人員</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <h3>測試音檔轉譯正確率</h3>
+                    <tr class="table-primary">
+                        <td>音檔時長</td>
+                        <td>00:02:35</td>
+                        <td>00:03:16</td>
+                        <td>00:03:55</td>
+                        <td>00:03:15</td>
+                        <td>00:03:18</td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <td>文本字數</td>
+                        <td>740</td>
+                        <td>964</td>
+                        <td>998</td>
+                        <td>924</td>
+                        <td>1000</td>
+                    </tr>
+                    <tr class="table-success">
+                        <td>語音辨識模型</td>
+                        <td colspan="5">Whisper（base）</td> <!-- 合併五欄 -->
+                    </tr>
+                    <tr class="table-danger">
+                        <td>生成摘要模型</td>
+                        <td colspan="5">ANTHROPIC_LLM_MODEL</td>
+                    </tr>
+                    <tr class="table-warning">
+                        <td>轉譯結果正確率</td>
+                        <td>92.94%</td>
+                        <td>89.31%</td>
+                        <td>91.30 %</td>
+                        <td>97.62%</td>
+                        <td>95.58%</td>
+                    </tr>
+                    <tr class="table-info">
+                        <td>轉譯日期時間</td>
+                        <td>2024/09/25 10:29:16</td>
+                        <td>2024/09/25 10:35:07</td>
+                        <td>2024/09/12 11:41:40</td>
+                        <td>2024/09/12 16:14:08</td>
+                        <td>2024/09/12 16:30:04</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 產品服務 -->
+    <section id="services" class="services section light-background">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>產品服務</h2>
+        <p>將您原本需要耗費數小時至數天的工作內容，現在只要一鍵就搞定！</p>
+      </div>
+
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-mic-fill icon"></i></div>
+              <h4><class="stretched-link">音檔輕鬆轉換文本內容</a></h4>
+              <p>透過最新 AI 語音轉譯技術，將音檔轉換成精確的文字內容。</p>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-file-earmark-medical-fill icon"></i></div>
+              <h4><class="stretched-link">文本內容抓取重點摘要</a></h4>
+              <p>透過 AI 提取文本重點技術來摘要大量內容，節省閱讀時間。</p>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-file-earmark-music-fill icon"></i></div>
+              <h4><class="stretched-link">本地音檔方便快速上傳</a></h4>
+              <p>支援使用者本地設備音檔上傳，操作簡單方便。</p>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-youtube icon"></i></div>
+              <h4><class="stretched-link">Youtube連結生成摘要</a></h4>
+              <p>支援使用者貼上 Youtube 連結快速生成摘要內容，功能強大。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 立即使用 -->
+    <section id="call-to-action" class="call-to-action section dark-background">
+
+      <img src="../../static/img/technology-bg.jpg" alt="">
+      <div class="container">
+        <div class="row" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-9 text-center text-xl-start">
+            <h1>立即使用<br>快速語音摘要生成工具</h1>
+            <p>別再為了瑣碎的事務而費時，將您的煩惱交給我們！<br>您將能快速得到語音摘要成果，點擊右方按鈕，立即體驗語音摘要生成工具吧！</p>
+          </div>
+          <div class="col-xl-3 cta-btn-container text-center">
+            <a class="cta-btn align-middle" href="/transcribe/index">立即使用</a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 畫面示意  -->
+    <section id="portfolio" class="portfolio section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>畫面示意</h2>
+        <p>產品服務包括本地端音檔及 Youtube 連結選擇語音摘要</p>
+      </div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
+      </div>
+      <div class="carousel-inner trans-img ">
+        <div class="carousel-item active">
+          <img src="../../static/img/masonry-portfolio/index.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/local.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/url.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/轉譯中.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/url轉譯中.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/轉譯內容.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+        <div class="carousel-item trans-img">
+          <img src="../../static/img/masonry-portfolio/摘要內容.png" class="carousel-img" alt="..." weight="100" height="470">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  </main>
+
+    <div class="container copyright text-center mt-4">
+      <h3>Designed by <a href="https://bootstrapmade.com/">語音摘要小組</a></h3>
     </div>
 
-    <div class="button-container">
-        <a href="/transcribe/index" class="button">開始使用</a>
-    </div>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../static/vendor/php-email-form/validate.js"></script>
+  <script src="../../static/vendor/aos/aos.js"></script>
+  <script src="../../static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../../static/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../static/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../static/js/index_main.js"></script>
 
 </body>
 
